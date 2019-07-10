@@ -57,13 +57,16 @@ public class ClickReceiver extends AbstractClickReceiver {
 
         fireEvent(action, notification, data);
 
-        if (notification.getOptions().isSticky())
-            return;
+        if (notification != null) {
 
-        if (isLast()) {
-            notification.cancel();
-        } else {
-            notification.clear();
+            if (notification.getOptions().isSticky())
+                return;
+
+            if (isLast()) {
+                notification.cancel();
+            } else {
+                notification.clear();
+            }
         }
     }
 

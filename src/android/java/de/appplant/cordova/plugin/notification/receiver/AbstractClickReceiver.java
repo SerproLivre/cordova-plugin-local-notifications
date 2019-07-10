@@ -21,10 +21,11 @@
 
 package de.appplant.cordova.plugin.notification.receiver;
 
-import android.app.IntentService;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.IBinder;
 
 import de.appplant.cordova.plugin.notification.Manager;
 import de.appplant.cordova.plugin.notification.Notification;
@@ -37,20 +38,42 @@ import static de.appplant.cordova.plugin.notification.action.Action.EXTRA_ID;
 /**
  * Abstract content receiver activity for local notifications. Creates the
  * local notification and calls the event functions for further proceeding.
+ *
+ * <b>PS:</b> Inherit from {@link android.app.Service} class, insteadof {@link android.app.IntentService}
+ * to starts this service in background/foreground.
+ *
+ * @link https://stackoverflow.com/questions/6422319/start-service-from-notification
  */
-abstract public class AbstractClickReceiver extends IntentService {
+abstract public class AbstractClickReceiver extends Service {
 
     // Holds a reference to the intent to handle.
     private Intent intent;
 
     public AbstractClickReceiver() {
-        super("LocalNotificationClickReceiver");
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        onHandleIntent(intent);
+        return START_STICKY;
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        // We don't provide binding, so return null
+        return null;
     }
 
     /**
      * Called when local notification was clicked to launch the main intent.
+     *
+     * <b>PS:</b> This method is only present in class IntentService
+     * but, it is still here for migration purpposes
+     *
+     * @see #onStartCommand(Intent, int, int)
      */
-    @Override
     protected void onHandleIntent(Intent intent) {
         this.intent        = intent;
 
@@ -65,9 +88,6 @@ abstract public class AbstractClickReceiver extends IntentService {
 
         int toastId        = bundle.getInt(Notification.EXTRA_ID);
         Notification toast = Manager.getInstance(context).get(toastId);
-
-        if (toast == null)
-            return;
 
         onClick(toast, bundle);
         this.intent = null;

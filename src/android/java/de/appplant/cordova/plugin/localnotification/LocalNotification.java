@@ -41,7 +41,9 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.appplant.cordova.plugin.notification.Manager;
 import de.appplant.cordova.plugin.notification.Notification;
@@ -60,6 +62,8 @@ import static de.appplant.cordova.plugin.notification.Notification.Type.TRIGGERE
  */
 @SuppressWarnings({"Convert2Diamond", "Convert2Lambda"})
 public class LocalNotification extends CordovaPlugin {
+
+    protected static Map<String, ArrayList<LocalNotificationListener>> listeners = new HashMap<String, ArrayList<LocalNotificationListener>>();
 
     // Reference to the web view for static access
     private static WeakReference<CordovaWebView> webView = null;
@@ -528,7 +532,8 @@ public class LocalNotification extends CordovaPlugin {
     }
 
     /**
-     * Fire given event on JS side. Does inform all event listeners.
+     * Fire given event on JS side, or from native {@link #listeners} property.
+     * Does inform all event listeners.
      *
      * @param event The event name.
      * @param toast Optional notification to pass with.
@@ -555,14 +560,37 @@ public class LocalNotification extends CordovaPlugin {
             params = data.toString();
         }
 
-        js = "cordova.plugins.notification.local.fireEvent(" +
-                "\"" + event + "\"," + params + ")";
+        if (webView != null) {
 
-        if (launchDetails == null && !deviceready && toast != null) {
-            launchDetails = new Pair<Integer, String>(toast.getId(), event);
+            js = "cordova.plugins.notification.local.fireEvent(" +
+                    "\"" + event + "\"," + params + ")";
+
+            if (launchDetails == null && !deviceready && toast != null) {
+                launchDetails = new Pair<Integer, String>(toast.getId(), event);
+            }
+            sendJavascript(js);
+        } else if (listeners.size() > 0) {
+            ArrayList<LocalNotificationListener> callbacks = listeners.get(event);
+            if (callbacks != null && !callbacks.isEmpty()) {
+                for (LocalNotificationListener listener:
+                     callbacks) {
+                    listener.run(data);
+                }
+            }
         }
 
-        sendJavascript(js);
+    }
+
+    public static void on(String event, LocalNotificationListener listener) {
+
+        ArrayList<LocalNotificationListener> callbacks = listeners.get(event);
+
+        if (callbacks == null || !callbacks.isEmpty()) {
+            callbacks = new ArrayList<LocalNotificationListener>();
+        }
+
+        callbacks.add(listener);
+        listeners.put(event, callbacks);
     }
 
     /**
