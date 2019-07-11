@@ -24,7 +24,6 @@
 package de.appplant.cordova.plugin.localnotification;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.Date;
 
@@ -33,6 +32,7 @@ import de.appplant.cordova.plugin.notification.Manager;
 import de.appplant.cordova.plugin.notification.Notification;
 import de.appplant.cordova.plugin.notification.Request;
 import de.appplant.cordova.plugin.notification.receiver.AbstractRestoreReceiver;
+import de.appplant.cordova.plugin.notification.receiver.ClickBroadcastReceiver;
 
 /**
  * This class is triggered upon reboot of the device. It needs to re-register
@@ -74,7 +74,7 @@ public class RestoreReceiver extends AbstractRestoreReceiver {
     @Override
     public Notification buildNotification (Builder builder) {
         return builder
-                .setClickActivity(ClickReceiver.class)
+                .setClickActivity(ClickBroadcastReceiver.class)
                 .setClearReceiver(ClearReceiver.class)
                 .build();
     }

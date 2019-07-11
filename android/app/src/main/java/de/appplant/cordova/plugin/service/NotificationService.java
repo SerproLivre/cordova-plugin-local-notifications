@@ -19,6 +19,7 @@ import de.appplant.cordova.plugin.R;
 import de.appplant.cordova.plugin.localnotification.ClickReceiver;
 import de.appplant.cordova.plugin.notification.Options;
 import de.appplant.cordova.plugin.notification.action.Action;
+import de.appplant.cordova.plugin.notification.receiver.ClickBroadcastReceiver;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 
@@ -95,15 +96,15 @@ public class NotificationService extends IntentService {
             }
         }
 
-        Intent intent = new Intent(this, ClickReceiver.class)
+        Intent intent = new Intent(this, ClickBroadcastReceiver.class)
                 .putExtra(Action.EXTRA_ID, Action.CLICK_ACTION_ID)
-                .putExtra(Options.EXTRA_LAUNCH, true)
-                .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                .putExtra(Options.EXTRA_LAUNCH, true);
+//                .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+//                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         int reqCode = random.nextInt();
 
-        PendingIntent contentIntent = PendingIntent.getService(
+        PendingIntent contentIntent = PendingIntent.getBroadcast(
                 this, reqCode, intent, FLAG_UPDATE_CURRENT);
 
 

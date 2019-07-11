@@ -24,7 +24,8 @@
 
         <service
             android:name="de.appplant.cordova.plugin.localnotification.ClickReceiver"
-            android:exported="false" />
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver
             android:name="de.appplant.cordova.plugin.localnotification.RestoreReceiver"
@@ -35,5 +36,9 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name="de.appplant.cordova.plugin.notification.receiver.ClickBroadcastReceiver"
+            android:exported="true" />
     </application>
 </manifest>

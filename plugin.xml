@@ -132,6 +132,10 @@
                     <action android:name="android.intent.action.BOOT_COMPLETED" />
                 </intent-filter>
             </receiver>
+
+            <receiver
+                android:name="de.appplant.cordova.plugin.notification.receiver.ClickBroadcastReceiver"
+                android:exported="true" />
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest">
@@ -145,6 +149,10 @@
 
         <source-file
             src="src/android/java/de/appplant/cordova/plugin/localnotification/LocalNotification.java"
+            target-dir="src/de/appplant/cordova/plugin/localnotification" />
+
+        <source-file
+            src="src/android/java/de/appplant/cordova/plugin/localnotification/LocalNotificationListener.java"
             target-dir="src/de/appplant/cordova/plugin/localnotification" />
 
         <source-file
@@ -188,7 +196,11 @@
             target-dir="src/de/appplant/cordova/plugin/notification/receiver" />
 
         <source-file
-            src="src/de/appplant/cordova/plugin/notification/trigger/DateTrigger.java"
+            src="src/android/java/de/appplant/cordova/plugin/notification/receiver/ClickBroadcastReceiver.java"
+            target-dir="src/de/appplant/cordova/plugin/notification/receiver" />
+
+        <source-file
+            src="src/android/java/de/appplant/cordova/plugin/notification/trigger/DateTrigger.java"
             target-dir="src/de/appplant/cordova/plugin/notification/trigger" />
 
         <source-file

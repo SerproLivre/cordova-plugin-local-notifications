@@ -22,6 +22,8 @@
 package de.appplant.cordova.plugin.notification;
 
 import android.app.PendingIntent;
+import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -337,14 +339,15 @@ public final class Builder {
      */
     private void applyContentReceiver(NotificationCompat.Builder builder) {
 
+        PendingIntent contentIntent;
+
         if (clickActivity == null)
             return;
 
         Intent intent = new Intent(context, clickActivity)
                 .putExtra(Notification.EXTRA_ID, options.getId())
                 .putExtra(Action.EXTRA_ID, Action.CLICK_ACTION_ID)
-                .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp())
-                .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                .putExtra(Options.EXTRA_LAUNCH, options.isLaunchingApp());
 
         if (extras != null) {
             intent.putExtras(extras);
@@ -352,8 +355,19 @@ public final class Builder {
 
         int reqCode = random.nextInt();
 
-        PendingIntent contentIntent = PendingIntent.getService(
+        contentIntent   = PendingIntent.getBroadcast(
                 context, reqCode, intent, FLAG_UPDATE_CURRENT);
+//        if (clickActivity.isAssignableFrom(BroadcastReceiver.class)) {
+//        } else if (clickActivity.isAssignableFrom(Service.class)) {
+//
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//            contentIntent = PendingIntent.getService(
+//                    context, reqCode, intent, FLAG_UPDATE_CURRENT);
+//        } else {
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//            contentIntent = PendingIntent.getActivity(
+//                    context, reqCode, intent, FLAG_UPDATE_CURRENT);
+//        }
 
         builder.setContentIntent(contentIntent);
     }

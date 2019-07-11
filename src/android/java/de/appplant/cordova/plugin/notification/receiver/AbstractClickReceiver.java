@@ -26,6 +26,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
 
 import de.appplant.cordova.plugin.notification.Manager;
 import de.appplant.cordova.plugin.notification.Notification;
@@ -44,27 +46,28 @@ import static de.appplant.cordova.plugin.notification.action.Action.EXTRA_ID;
  *
  * @link https://stackoverflow.com/questions/6422319/start-service-from-notification
  */
-abstract public class AbstractClickReceiver extends Service {
+abstract public class AbstractClickReceiver extends JobIntentService {
 
     // Holds a reference to the intent to handle.
     private Intent intent;
 
-    public AbstractClickReceiver() {
 
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
-        onHandleIntent(intent);
-        return START_STICKY;
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        // We don't provide binding, so return null
-        return null;
-    }
+//    public AbstractClickReceiver() {
+//
+//    }
+//
+////    @Override
+////    public int onStartCommand(Intent intent, int flags, int startId) {
+////
+////        onHandleIntent(intent);
+////        return START_STICKY;
+////    }
+////
+////    @Override
+////    public IBinder onBind(Intent intent) {
+////        // We don't provide binding, so return null
+////        return null;
+////    }
 
     /**
      * Called when local notification was clicked to launch the main intent.

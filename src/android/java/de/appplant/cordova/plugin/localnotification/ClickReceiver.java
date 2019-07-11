@@ -21,7 +21,10 @@
 
 package de.appplant.cordova.plugin.localnotification;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.RemoteInput;
 
 import org.json.JSONException;
@@ -40,6 +43,21 @@ import static de.appplant.cordova.plugin.notification.Request.EXTRA_LAST;
  * up to foreground.
  */
 public class ClickReceiver extends AbstractClickReceiver {
+
+    /**
+     * Unique job ID for this service.
+     */
+    private static final int JOB_ID = 2;
+
+    public static void enqueueWork(Context context, Intent intent) {
+        enqueueWork(context, ClickReceiver.class, JOB_ID, intent);
+    }
+
+
+    @Override
+    protected void onHandleWork(@NonNull Intent intent) {
+        onHandleIntent(intent);
+    }
 
     /**
      * Called when local notification was clicked by the user.
